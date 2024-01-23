@@ -15,7 +15,7 @@ const url = process.env.MONGO_URL
 const dbName = process.env.MONGO_DB_NAME;
 const collectionName = process.env.MONGO_COLLECTION_NAME;
 var alarma_st,cerco_st;
-global.player;
+let global.player;
 
 app.use(bodyParser.json());
 app.set('view engine','ejs');
