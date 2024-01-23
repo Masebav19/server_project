@@ -2,8 +2,8 @@ const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
 
 dotenv.config();
-var fecha = new Array()
-var file_name = new Array();
+let fecha = new Array()
+let file_name = new Array();
 exports.read_hist_video = async function(){
     const client = new MongoClient(process.env.MONGO_URL);
     await client.connect()
