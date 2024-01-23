@@ -12,7 +12,7 @@ const fecha_actual ={
     const dia = now.getDate().toString();
     const hora = now.getHours().toString();
     const min = now.getMinutes().toString();
-    fecha = anio+'-'+mes2+'-'+dia+'T-'+hora+'h'+min+'min';
+    const fecha = anio+'-'+mes2+'-'+dia+'T-'+hora+'h'+min+'min';
     return fecha
   }  
 }
