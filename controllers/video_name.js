@@ -24,7 +24,7 @@ exports.get_last_video = function(directorioVideos,callback){
           };
         }).sort((a, b) => b.fechaModificacion - a.fechaModificacion);
         if (archivosOrdenados.length > 0) {
-          ultimoArchivo = archivosOrdenados[0].nombre;
+          let ultimoArchivo = archivosOrdenados[0].nombre;
           console.log('El archivo más reciente es:', ultimoArchivo);
           callback(null,ultimoArchivo);
         } else {
