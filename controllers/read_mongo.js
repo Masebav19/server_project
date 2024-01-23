@@ -17,7 +17,7 @@ exports.read_hist_video = async function(){
     })
   } finally {
     await client.close();
-    return [fecha,file_name]
+    
   }
-      
+    return [fecha,file_name]  
 }
