@@ -9,13 +9,27 @@ const app = express();
 
 dotenv.config();
 
+const fecha_actual ={
+  fecha_string(){
+    const now = new Date();
+    const anio = now.getFullYear().toString();
+    const mes = now.getMonth()+1;
+    const mes2 = mes.toString();
+    const dia = now.getDate().toString();
+    const hora = now.getHours().toString();
+    const min = now.getMinutes().toString();
+    const fecha = anio+'-'+mes2+'-'+dia+'T-'+hora+'h'+min+'min';
+    return fecha
+  }  
+}
+
 
 var st_alarm_0 = 'Desactivado';
 const url = process.env.MONGO_URL
 const dbName = process.env.MONGO_DB_NAME;
 const collectionName = process.env.MONGO_COLLECTION_NAME;
 var alarma_st,cerco_st;
-global.player;
+let player;
 
 app.use(bodyParser.json());
 app.set('view engine','ejs');
@@ -36,6 +50,7 @@ app.post('/put', async (req, res) => {
     const { cerco_id, Estado_cerco,Estado_alarma, Fecha } = req.body;
     alarma_st = Estado_alarma;
     cerco_st = Estado_cerco;
+    Fecha_evento = fecha_actual.fecha_string();
     const client = new MongoClient(url);
   
     try {
@@ -43,8 +58,8 @@ app.post('/put', async (req, res) => {
       const db = client.db(dbName);
       const collection = db.collection(collectionName);
       //envio de datos de cerco
-      const result = await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha });
-  
+      const result = await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
+      
       console.log('Datos insertados correctamente:', result.insertedId);
       //envio de datos CPU
       const cpu_var = require('./controllers/CPU_perf.js').cpu_perf();
@@ -57,22 +72,27 @@ app.post('/put', async (req, res) => {
 
       if (Estado_alarma == 'Activado' && st_alarm_0 == 'Desactivado'){
         st_alarm_0 = Estado_alarma;  
-        global.player = new camera(process.env.RTSP_CAMERA_URL)
-        global.player.on('statuschange', (error, status) => {
-          try {
-              if (status.time == 2){
-                  require('./controllers/VLC_CMD.js').press_key();
-                  return
-              } 
-          } catch (error){}   
-      }) 
+        try {
+          global.player = new camera(process.env.RTSP_CAMERA_URL)
+          global.player.on('statuschange', (error, status) => {
+            try {
+                if (status.time == 2){
+                    require('./controllers/VLC_CMD.js').press_key();
+                    return
+                } 
+            } catch (error){}   
+          }) 
+        } catch (error) {
+          console.log('No se puede conectar a la camara',error)
+        }  
       }
   
       if (Estado_alarma == 'Desactivado' && st_alarm_0 =='Activado'){
         st_alarm_0 = Estado_alarma;
         require('./controllers/VLC_CMD.js').press_key();
-        global.player.quit();
-        var video = require("./controllers/video_name.js")
+        try {
+          global.player.quit();
+          var video = require("./controllers/video_name.js")
         video.get_last_video(process.env.VIDEO_PATH, (err, ultimoArchivo) => {
             if (err) {
               console.error('Error al obtener el último archivo:', err);
@@ -88,6 +108,9 @@ app.post('/put', async (req, res) => {
             })
             
           });
+        } catch (error) {
+          console.log(error)
+        }
       }
 
     } catch (err) {
@@ -98,11 +121,11 @@ app.post('/put', async (req, res) => {
       }
   })
 
-app.get('/',(req,res)=>{
+app.get('/last_video',(req,res)=>{
   res.render('index.ejs')
 });
 
-app.get('/main',(req,res)=>{
+app.get('/',(req,res)=>{
   res.render('main.ejs',{alarma: alarma_st, estado: cerco_st})
 });
 

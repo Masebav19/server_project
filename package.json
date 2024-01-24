@@ -1,7 +1,8 @@
 {
-  "name": "node",
+  "name": "server_project-main",
   "version": "1.0.0",
-  "main": "avi2mp4.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm i && node server.js"
@@ -10,21 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "child_process": "^1.0.2",
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
-    "fs": "^0.0.1-security",
     "handbrake-js": "^7.0.0",
-    "http": "^0.0.1-security",
-    "jsmpeg": "^1.0.0",
     "mongodb": "^6.3.0",
-    "node-nmap": "^4.0.0",
-    "node-rtsp-stream": "^0.0.9",
-    "nodemon": "^3.0.3",
-    "path": "^0.12.7",
-    "robotjs": "^0.6.0",
-    "vlc-simple-player": "^0.5.1"
-  },
-  "description": ""
+    "nodemon": "^3.0.3"
+  }
 }
