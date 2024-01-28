@@ -79,9 +79,8 @@ app.post('/put', async (req, res) => {
             try {
                 if (status.time == 2){
                     require('./controllers/VLC_CMD.js').press_key();
-                    return
                 } 
-            } catch (error){}   
+            } 
           }) 
         } catch (error) {
           console.log('No se puede conectar a la camara',error)
