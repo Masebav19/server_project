@@ -24,11 +24,11 @@ const fecha_actual ={
 }
 
 
-var st_alarm_0 = 'Desactivado';
+let st_alarm_0 = 'Desactivado';
 const url = process.env.MONGO_URL
 const dbName = process.env.MONGO_DB_NAME;
 const collectionName = process.env.MONGO_COLLECTION_NAME;
-var alarma_st,cerco_st;
+let alarma_st,cerco_st;
 let player;
 
 app.use(bodyParser.json());
@@ -36,7 +36,7 @@ app.set('view engine','ejs');
 app.use('/public/', express.static('./public'));
 
 
-stream = new Stream({
+let stream = new Stream({
   name: alarma_st,
   streamUrl: process.env.RTSP_CAMERA_URL,
   wsPort: 9999,
