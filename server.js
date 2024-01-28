@@ -50,7 +50,7 @@ app.post('/put', async (req, res) => {
     const { cerco_id, Estado_cerco,Estado_alarma, Fecha } = req.body;
     alarma_st = Estado_alarma;
     cerco_st = Estado_cerco;
-    Fecha_evento = fecha_actual.fecha_string();
+    let Fecha_evento = fecha_actual.fecha_string();
     const client = new MongoClient(url);
   
     try {
@@ -58,7 +58,7 @@ app.post('/put', async (req, res) => {
       const db = client.db(dbName);
       const collection = db.collection(collectionName);
       //envio de datos de cerco
-      const result = await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
+      await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
       
       const data = await collection.findOne({Fecha_evento: Fecha_evento})
       console.log("Mongo Id: "+data._id.toString())
@@ -68,7 +68,7 @@ app.post('/put', async (req, res) => {
       const Tiempo_user_mode_ms = cpu_var[1]
       const cpucollection = db.collection(process.env.MONGO_SECOND_COLLECTION_NAME);
 
-      const resultcpu= await cpucollection.insertOne({Memoria_Ram_MB,Tiempo_user_mode_ms})
+      await cpucollection.insertOne({Memoria_Ram_MB,Tiempo_user_mode_ms})
       res.status(200).send('Datos insertados correctamente');
 
       if (Estado_alarma == 'Activado' && st_alarm_0 == 'Desactivado'){
@@ -93,7 +93,7 @@ app.post('/put', async (req, res) => {
         require('./controllers/VLC_CMD.js').press_key();
         try {
           global.player.quit();
-          var video = require("./controllers/video_name.js")
+          let video = require("./controllers/video_name.js")
         video.get_last_video(process.env.VIDEO_PATH, (err, ultimoArchivo) => {
             if (err) {
               console.error('Error al obtener el último archivo:', err);
