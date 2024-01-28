@@ -60,7 +60,8 @@ app.post('/put', async (req, res) => {
       //envio de datos de cerco
       const result = await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
       
-      console.log('Datos insertados correctamente:', result.insertedId);
+      const data = await collection.findOne({Fecha_evento: Fecha_evento})
+      console.log("Mongo Id: "+data._id.toString())
       //envio de datos CPU
       const cpu_var = require('./controllers/CPU_perf.js').cpu_perf();
       const Memoria_Ram_MB = cpu_var[0];
