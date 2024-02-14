@@ -24,11 +24,11 @@ const fecha_actual ={
 }
 
 
-let st_alarm_0 = 'Desactivado';
+var st_alarm_0 = 'Desactivado';
 const url = process.env.MONGO_URL
 const dbName = process.env.MONGO_DB_NAME;
 const collectionName = process.env.MONGO_COLLECTION_NAME;
-let alarma_st,cerco_st;
+var alarma_st,cerco_st;
 let player;
 
 app.use(bodyParser.json());
@@ -36,7 +36,7 @@ app.set('view engine','ejs');
 app.use('/public/', express.static('./public'));
 
 
-let stream = new Stream({
+stream = new Stream({
   name: alarma_st,
   streamUrl: process.env.RTSP_CAMERA_URL,
   wsPort: 9999,
@@ -50,7 +50,7 @@ app.post('/put', async (req, res) => {
     const { cerco_id, Estado_cerco,Estado_alarma, Fecha } = req.body;
     alarma_st = Estado_alarma;
     cerco_st = Estado_cerco;
-    let Fecha_evento = fecha_actual.fecha_string();
+    Fecha_evento = fecha_actual.fecha_string();
     const client = new MongoClient(url);
   
     try {
@@ -58,7 +58,7 @@ app.post('/put', async (req, res) => {
       const db = client.db(dbName);
       const collection = db.collection(collectionName);
       //envio de datos de cerco
-      await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
+      const result = await collection.insertOne({ cerco_id, Estado_cerco,Estado_alarma, Fecha_evento });
       
       const data = await collection.findOne({Fecha_evento: Fecha_evento})
       console.log("Mongo Id: "+data._id.toString())
@@ -68,7 +68,7 @@ app.post('/put', async (req, res) => {
       const Tiempo_user_mode_ms = cpu_var[1]
       const cpucollection = db.collection(process.env.MONGO_SECOND_COLLECTION_NAME);
 
-      await cpucollection.insertOne({Memoria_Ram_MB,Tiempo_user_mode_ms})
+      const resultcpu= await cpucollection.insertOne({Memoria_Ram_MB,Tiempo_user_mode_ms})
       res.status(200).send('Datos insertados correctamente');
 
       if (Estado_alarma == 'Activado' && st_alarm_0 == 'Desactivado'){
@@ -79,8 +79,9 @@ app.post('/put', async (req, res) => {
             try {
                 if (status.time == 2){
                     require('./controllers/VLC_CMD.js').press_key();
+                    return
                 } 
-            } 
+            } catch (error){}   
           }) 
         } catch (error) {
           console.log('No se puede conectar a la camara',error)
@@ -92,7 +93,7 @@ app.post('/put', async (req, res) => {
         require('./controllers/VLC_CMD.js').press_key();
         try {
           global.player.quit();
-          let video = require("./controllers/video_name.js")
+          var video = require("./controllers/video_name.js")
         video.get_last_video(process.env.VIDEO_PATH, (err, ultimoArchivo) => {
             if (err) {
               console.error('Error al obtener el último archivo:', err);
@@ -126,7 +127,8 @@ app.get('/last_video',(req,res)=>{
 });
 
 app.get('/',(req,res)=>{
-  res.render('main.ejs',{alarma: alarma_st, estado: cerco_st})
+  let fecha = fecha_actual.fecha_string();
+  res.render('main.ejs',{alarma: alarma_st, estado: cerco_st, fecha: fecha})
 });
 
 app.get('/video',(req,res)=>{
