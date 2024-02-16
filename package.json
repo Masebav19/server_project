@@ -1,0 +1,28 @@
+{
+  "name": "server_project-main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm i && node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.2",
+    "express": "^4.18.2",
+    "handbrake-js": "^7.0.0",
+    "mongodb": "^6.3.0",
+    "node-rtsp-stream": "^0.0.9",
+    "nodemon": "^3.0.3",
+    "perf_hooks": "^0.0.1",
+    "pidusage": "^3.0.2",
+    "robotjs": "^0.6.0",
+    "start": "^5.1.0",
+    "vlc-simple-player": "^0.5.1",
+    "winston": "^3.11.0"
+  }
+}
